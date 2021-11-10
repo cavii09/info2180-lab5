@@ -3,8 +3,8 @@ $host = 'localhost';
 $username = 'lab5_user';
 $password = 'password123';
 $dbname = 'world';
-$country = $_GET['country'];
-$context = $_GET['context'];
+$country = trim(filter_var(($_GET['country']), FILTER_SANITIZE_STRING));
+$context = trim(filter_var(($_GET['context']), FILTER_SANITIZE_STRING));
 
 $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
 
@@ -13,7 +13,7 @@ if ($context == "countries"){
 }
 else
 {
-  $stmt = $conn->query("SELECT cities.name, cities.district, cities.population FROM cities INNER JOIN countries ON cities.country_code = countries.code WHERE countries.name Like '%$country%'");
+  $stmt = $conn->query("SELECT cities.name, cities.district, cities.population FROM cities JOIN countries ON cities.country_code = countries.code WHERE countries.name Like '%$country%'");
 }
 
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -48,7 +48,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <tr>
       <td><?= $row['name'] ?></td>
       <td><?= $row['district'] ?></td>
-      <td><?= $row['poplulation'] ?></td>
+      <td><?= $row['population'] ?></td>
   </tr>
   <?php endforeach; ?>
   </table>
